@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLOutput;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
 
@@ -110,15 +111,48 @@ public class Duke {
         }
         bufferItem = bufferItem.substring(0, bufferItem.length() - 1);
         bufferDeadline = bufferDeadline.substring(0, bufferDeadline.length() - 1);
+        String[] smartDeadline = bufferDeadline.split("\\s+");
+        String buffernewDeadline = "";
+        String[] smartDate;
+        String[] months = new String[] {"January", "February", "March", "April", "May", "June", "July", "August",
+        "September", "October", "November", "December"};
+        if (smartDeadline[0].contains("/")) {
+            smartDate = smartDeadline[0].split("\\/");
+            if (smartDate.length == 3) {
+                if (smartDate[0].charAt(smartDate[0].length() - 1) == '1') smartDate[0] += "st";
+                else if (smartDate[0].charAt(smartDate[0].length() - 1) == '2') smartDate[0] += "nd";
+                else if (smartDate[0].charAt(smartDate[0].length() - 1) == '3') smartDate[0] += "rd";
+                else smartDate[0] += "th";
+                smartDate[1] = months[Integer.parseInt(smartDate[1]) -1];
+                buffernewDeadline += smartDate[0];
+                buffernewDeadline += " of ";
+                buffernewDeadline += smartDate[1] + " ";
+                buffernewDeadline += smartDate[2] + ", ";
+
+            }
+        }
+
+        if (smartDeadline.length == 2) {
+            double intTime = Double.parseDouble(smartDeadline[1]);
+            if (intTime > 1200) {
+                intTime /= 100;
+                intTime -= 12;
+                buffernewDeadline += String.format("%.2f", intTime) + "pm";
+            } else {
+                intTime /= 100;
+                buffernewDeadline += String.format("%.2f", intTime) + "am";
+            }
+        }
+
         if (dlArray[0].equals("deadline")) {
-            Deadline dl = new Deadline(bufferItem, bufferDeadline);
+            Deadline dl = new Deadline(bufferItem, buffernewDeadline);
             taskList.add(dl);
-            cf.saveDlEvent("D", "0", bufferItem, bufferDeadline);
+            cf.saveDlEvent("D", "0", bufferItem, buffernewDeadline);
             System.out.print(dl.printText());
         } else if (dlArray[0].equals("event")) {
-            Event ev = new Event(bufferItem, bufferDeadline);
+            Event ev = new Event(bufferItem, buffernewDeadline);
             taskList.add(ev);
-            cf.saveDlEvent("E", "0", bufferItem, bufferDeadline);
+            cf.saveDlEvent("E", "0", bufferItem, buffernewDeadline);
             System.out.print(ev.printText());
         }
     }
