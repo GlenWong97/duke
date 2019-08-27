@@ -1,15 +1,23 @@
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLOutput;
 import java.util.*;
+import java.io.*;
 
 public class Duke {
-    public static void main(String[] args) throws DukeException {
+
+    public static void main(String[] args) throws DukeException, IOException {
 
         String bracket = "____________________________________________________________\n";
         openingMessage();
+
         Scanner myObj = new Scanner(System.in);
-        String inputMessage = myObj.nextLine();
+
         ArrayList<Task> taskList = new ArrayList<Task>();
+        loadSave(taskList);
+
+        String inputMessage = myObj.nextLine();
+        CreateFile cf = new CreateFile();
 
         while (!inputMessage.equals("bye")) {
             try {
@@ -18,14 +26,14 @@ public class Duke {
                 if (inputMessage.equals("list")) {
                     listPrint(taskList);
                 } else if (msgArray[0].equals("done")) {
-                    setDone(taskList, msgArray);
+                    setDone(taskList, msgArray, cf);
                 } else if (msgArray[0].equals("todo")) {
                     String[] todoArray = inputMessage.split(" ", 2);
-                    setTodo(taskList, todoArray);
+                    setTodo(taskList, todoArray, cf);
                 } else if (msgArray[0].equals("deadline")) {
-                    createDlEvent(taskList, inputMessage);
+                    createDlEvent(taskList, inputMessage, cf);
                 } else if (msgArray[0].equals("event")) {
-                    createDlEvent(taskList, inputMessage);
+                    createDlEvent(taskList, inputMessage, cf);
                 } else {
                     throw new DukeException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -58,7 +66,7 @@ public class Duke {
             System.out.print(taskList.get(i).toString() + " \n");
         }
     }
-    private static void setDone(ArrayList<Task>taskList, String[] msgArray) {
+    private static void setDone(ArrayList<Task>taskList, String[] msgArray, CreateFile cf) throws IOException{
         try {
             if (msgArray.length == 1) throw new DukeException("The index of the done item must be stated.");
             else if (!msgArray[1].matches("\\d+")) throw new DukeException("The index must be of numerical value.");
@@ -70,21 +78,23 @@ public class Duke {
             System.out.println(" Nice! I've marked this task as done:");
             System.out.print("   " + taskList.get(index).getStatus() + " ");
             System.out.println(taskList.get(index).name);
+            cf.updateFile(index + 1);
         } catch (DukeException ex) {
             System.out.println(" ☹ OOPS!!! " + ex.getMessage());
         }
     }
-    private static void setTodo(ArrayList<Task> taskList, String[] todoArray) {
+    private static void setTodo(ArrayList<Task> taskList, String[] todoArray, CreateFile cf)  throws IOException{
         try {
             if (todoArray.length == 1) throw new DukeException("The description of a todo cannot be empty.");
             Todo item = new Todo(todoArray[1]);
             taskList.add(item);
+            cf.saveTodo("T", "0", todoArray[1]);
             System.out.print(item.printText());
         } catch (DukeException ex) {
             System.out.println(" ☹ OOPS!!! " + ex.getMessage());
         }
     }
-    private static void createDlEvent(ArrayList<Task>taskList, String inputMessage) {
+    private static void createDlEvent(ArrayList<Task>taskList, String inputMessage, CreateFile cf) throws IOException {
         String[] dlArray = inputMessage.split(" ");
         String bufferItem = "";
         String bufferDeadline = "";
@@ -103,11 +113,56 @@ public class Duke {
         if (dlArray[0].equals("deadline")) {
             Deadline dl = new Deadline(bufferItem, bufferDeadline);
             taskList.add(dl);
+            cf.saveDlEvent("D", "0", bufferItem, bufferDeadline);
             System.out.print(dl.printText());
         } else if (dlArray[0].equals("event")) {
             Event ev = new Event(bufferItem, bufferDeadline);
             taskList.add(ev);
+            cf.saveDlEvent("E", "0", bufferItem, bufferDeadline);
             System.out.print(ev.printText());
         }
     }
+
+    private static void loadSave(ArrayList<Task> taskList) throws FileNotFoundException, DukeException{
+        try {
+            File file = new File("./data/duke.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String[] strArray = scanner.nextLine().split("\\s+\\|\\s+");
+                if (strArray[0].equals("T")) {
+                    if (strArray[1].equals("0")) {
+                        Todo item = new Todo(strArray[2]);
+                        taskList.add(item);
+                    } else {
+                        Todo item = new Todo(strArray[2]);
+                        item.setStatusDone();
+                        taskList.add(item);
+                    }
+                } else if (strArray[0].equals("E")) {
+                    if (strArray[1].equals("0")) {
+                        Event ev = new Event(strArray[2], strArray[3]);
+                        taskList.add(ev);
+                    } else {
+                        Event ev = new Event(strArray[2], strArray[3]);
+                        ev.setStatusDone();
+                        taskList.add(ev);
+                    }
+                } else if (strArray[0].equals("D")) {
+                    if (strArray[1].equals("0")) {
+                        Deadline dl = new Deadline(strArray[2], strArray[3]);
+                        taskList.add(dl);
+                    } else {
+                        Deadline dl = new Deadline(strArray[2], strArray[3]);
+                        dl.setStatusDone();
+                        taskList.add(dl);
+                    }
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
 }

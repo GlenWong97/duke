@@ -13,6 +13,12 @@ public class Task {
         numberOfTasks++;
     }
 
+    public Task (String name, boolean status) {
+        this.name = name;
+        this.status = status;
+        numberOfTasks++;
+    }
+
     public String getStatus() {
         return (status ? "[✓]" : "[✗]");
     }
