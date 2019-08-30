@@ -58,7 +58,6 @@ public class CreateFile {
             Scanner scanner = new Scanner(file);
             int i = 1;
             while (scanner.hasNext()) {
-
                 if (i != lineNumber) pw.println(scanner.nextLine());
                 else {
                     String[] str = scanner.nextLine().split("\\s+\\|\\s+");
@@ -70,13 +69,6 @@ public class CreateFile {
                 }
                 i++;
             }
-            /*br = new BufferedReader(new FileReader("./data/temp.txt"));
-            bw = new BufferedWriter(new FileWriter("./data/duke.txt"));
-            String line;
-            while ((line = br.readLine()) != null) {
-                bw.write(line);
-            }
-            br.close();*/
             pw.flush();
             pw.close();
             scanner.close();
@@ -85,6 +77,75 @@ public class CreateFile {
             tempFile.renameTo(dump);
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void deleteFile(int lineNumber) throws IOException {
+
+        try {
+            File tempFile = new File("./data/temp.txt");
+            FileWriter fw = new FileWriter(tempFile, false);
+            PrintWriter pw = new PrintWriter(fw);
+            File file = new File("./data/duke.txt");
+            Scanner scanner = new Scanner(file);
+            int i = 1;
+            while (scanner.hasNext()) {
+                if (i != lineNumber) {
+                    pw.println(scanner.nextLine());
+                } else {
+                    scanner.nextLine();
+                }
+                i++;
+            }
+            pw.flush();
+            pw.close();
+            scanner.close();
+            file.delete();
+            File dump = new File(filepath);
+            tempFile.renameTo(dump);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    static void loadSave(ArrayList<Task> taskList) throws FileNotFoundException, DukeException{
+        try {
+            File file = new File("./data/duke.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String[] strArray = scanner.nextLine().split("\\s+\\|\\s+");
+                if (strArray[0].equals("T")) {
+                    if (strArray[1].equals("0")) {
+                        Todo item = new Todo(strArray[2]);
+                        taskList.add(item);
+                    } else {
+                        Todo item = new Todo(strArray[2]);
+                        item.setStatusDone();
+                        taskList.add(item);
+                    }
+                } else if (strArray[0].equals("E")) {
+                    if (strArray[1].equals("0")) {
+                        Event ev = new Event(strArray[2], strArray[3]);
+                        taskList.add(ev);
+                    } else {
+                        Event ev = new Event(strArray[2], strArray[3]);
+                        ev.setStatusDone();
+                        taskList.add(ev);
+                    }
+                } else if (strArray[0].equals("D")) {
+                    if (strArray[1].equals("0")) {
+                        Deadline dl = new Deadline(strArray[2], strArray[3]);
+                        taskList.add(dl);
+                    } else {
+                        Deadline dl = new Deadline(strArray[2], strArray[3]);
+                        dl.setStatusDone();
+                        taskList.add(dl);
+                    }
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
