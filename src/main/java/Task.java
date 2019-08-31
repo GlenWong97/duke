@@ -39,6 +39,31 @@ public class Task {
         return numberOfTasks;
     }
 
+    static void searchKeyword(ArrayList<Task>taskList, String[] msgArray) throws DukeException {
+        String[] matchedKeyword;
+        System.out.println(" Here are the matching tasks in your list:");
+        try {
+            if (msgArray.length != 2) throw new DukeException("Please specify only one keyword!");
+            int i = 1;
+            for (Task x : taskList) {
+                String[] singleWord = x.name.split(" ");
+                for (String y : singleWord) {
+                    if (y.equals(msgArray[1])) {
+                        System.out.print(" " + i + ".");
+                        System.out.println(x.toString());
+                        i++;
+                        break;
+                    }
+                }
+
+            }
+
+        } catch (DukeException e) {
+            System.out.println(" ☹ OOPS!!! " + e.getMessage());
+        }
+
+    }
+
     static void setDelete(ArrayList<Task>taskList, String[] msgArray, CreateFile cf)  throws IOException {
         try {
             if (msgArray.length == 1) throw new DukeException("The index of the done item must be stated.");

@@ -20,6 +20,9 @@ public class Duke {
                     case ("list"):
                         Messenger.listPrint(taskList);
                         break;
+                    case ("find"):
+                        Task.searchKeyword(taskList, msgArray);
+                        break;
                     case ("done"):
                         Task.setDone(taskList, msgArray, cf);
                         break;
