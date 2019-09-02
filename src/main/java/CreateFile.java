@@ -88,4 +88,45 @@ public class CreateFile {
         }
     }
 
+    static void loadSave(ArrayList<Task> taskList) throws FileNotFoundException, DukeException{
+        try {
+            File file = new File("./data/duke.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String[] strArray = scanner.nextLine().split("\\s+\\|\\s+");
+                if (strArray[0].equals("T")) {
+                    if (strArray[1].equals("0")) {
+                        Todo item = new Todo(strArray[2]);
+                        taskList.add(item);
+                    } else {
+                        Todo item = new Todo(strArray[2]);
+                        item.setStatusDone();
+                        taskList.add(item);
+                    }
+                } else if (strArray[0].equals("E")) {
+                    if (strArray[1].equals("0")) {
+                        Event ev = new Event(strArray[2], strArray[3]);
+                        taskList.add(ev);
+                    } else {
+                        Event ev = new Event(strArray[2], strArray[3]);
+                        ev.setStatusDone();
+                        taskList.add(ev);
+                    }
+                } else if (strArray[0].equals("D")) {
+                    if (strArray[1].equals("0")) {
+                        Deadline dl = new Deadline(strArray[2], strArray[3]);
+                        taskList.add(dl);
+                    } else {
+                        Deadline dl = new Deadline(strArray[2], strArray[3]);
+                        dl.setStatusDone();
+                        taskList.add(dl);
+                    }
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
