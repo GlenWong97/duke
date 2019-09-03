@@ -21,7 +21,7 @@ public class Deadline extends Task {
         String text3 = " Now you have " + Integer.toString(Task.getNumberOfTasks()) +" tasks in the list.\n";
         return (text1 + text2 + text3);
     }
-    static void createDlEvent(ArrayList<Task> taskList, String inputMessage, CreateFile cf) throws IOException {
+    static void createDlEvent(ArrayList<Task> taskList, String inputMessage, Storage cf) throws IOException {
         String[] dlArray = inputMessage.split(" ");
         String bufferItem = "";
         String bufferDeadline = "";

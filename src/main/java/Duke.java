@@ -3,48 +3,41 @@ import java.util.*;
 
 public class Duke {
 
-    public static void main(String[] args) throws DukeException, IOException {
+    private Storage storage;
+    private TaskList tasks;
+    private Ui ui;
 
-        Messenger.openingMessage();
-        Scanner myObj = new Scanner(System.in);
-        ArrayList<Task> taskList = new ArrayList<Task>();
-        CreateFile cf = new CreateFile();
-        CreateFile.loadSave(taskList);
-        String inputMessage = myObj.nextLine();
-
-        while (!inputMessage.equals("bye")) {
-            try {
-                Messenger.printBracket();
-                String[] msgArray = inputMessage.split("\\s+");
-                switch (msgArray[0]) {
-                    case ("list"):
-                        Messenger.listPrint(taskList);
-                        break;
-                    case ("find"):
-                        Task.searchKeyword(taskList, msgArray);
-                        break;
-                    case ("done"):
-                        Task.setDone(taskList, msgArray, cf);
-                        break;
-                    case ("delete"):
-                        Task.setDelete(taskList, msgArray, cf);
-                        break;
-                    case ("todo"):
-                        String[] todoArray = inputMessage.split(" ", 2);
-                        Todo.setTodo(taskList, todoArray, cf);
-                        break;
-                    case ("deadline"):
-                    case ("event"):
-                        Deadline.createDlEvent(taskList, inputMessage, cf);
-                        break;
-                    default: throw new DukeException("I'm sorry, but I don't know what that means :-(");
-                }
-            } catch (DukeException ex){
-                System.out.println(" ☹ OOPS!!! " + ex.getMessage());
-            }
-            Messenger.printBracket();
-            inputMessage = myObj.nextLine();
+    public Duke(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        try {
+            tasks = new TaskList(storage.load());
+        } catch (DukeException e) {
+            ui.showLoadingError();
+            tasks = new TaskList();
         }
-        Messenger.closingMessage();
+    }
+
+    public void run() throws IOException {
+
+        ui.openingMessage();
+        boolean isExit = false;
+        while (!isExit) {
+            try {
+                String fullCommand = ui.readCommand();
+                ui.showLine();
+                Command c = Parser.parse(fullCommand);
+                c.execute(tasks, ui, storage);
+                isExit = c.isExit();
+            } catch (DukeException e) {
+                System.out.println(" ☹ OOPS!!! " + e.getMessage());
+            } finally {
+                ui.showLine();
+            }
+        }
+
+    }
+    public static void main(String[] args) throws IOException {
+        new Duke("data/duke.txt").run();
     }
 }

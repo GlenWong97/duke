@@ -1,7 +1,7 @@
 T | 1 | sing
 E | 1 | work | 6pm
+D | 1 | return book | 2nd of December 2019, 6.0 pm
 D | 0 | return book | 2nd of December 2019, 6.0 pm
-D | 0 | return book | 2nd of December 2019, 6.0 pm
-D | 0 | return book | 2nd of December 2019, 6.00 pm
+D | 1 | return book | 2nd of December 2019, 6.00 pm
 D | 1 | duke week4 | 31st of August 2019, 11.59pm
-T | 0 | watch lecture video
+T | 0 | homework

@@ -21,7 +21,7 @@ public class Todo extends Task{
         return (text1 + text2 + text3);
     }
 
-    static void setTodo(ArrayList<Task> taskList, String[] todoArray, CreateFile cf)  throws IOException {
+    static void setTodo(ArrayList<Task> taskList, String[] todoArray, Storage cf)  throws IOException {
         try {
             if (todoArray.length == 1) throw new DukeException("The description of a todo cannot be empty.");
             Todo item = new Todo(todoArray[1]);
