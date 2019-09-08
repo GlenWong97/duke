@@ -1,1 +1,13 @@
-hello world!!!~
+No duke.txt file found, creating one now!
+____________________________________________________________
+ Hello! I'm Duke
+ What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Error: .\data\duke.txt (The system cannot find the path specified)
+ Got it. I've added this task:
+   [T][✗] eat shit
+ Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________

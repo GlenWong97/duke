@@ -51,7 +51,7 @@ public class Storage {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new DukeException("No file");
+            throw new DukeException(e.getMessage());
         }
         return taskList;
     }

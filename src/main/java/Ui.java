@@ -1,9 +1,10 @@
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Ui {
 
-    private static String command;
+    Scanner myObj = new Scanner(System.in);
     public void showLoadingError() {
         System.out.println("No duke.txt file found, creating one now!");
     }
@@ -44,10 +45,12 @@ public class Ui {
         }
     }
 
-    public String readCommand() {
-        Scanner myObj = new Scanner(System.in);
-        command = myObj.nextLine();
-        return command;
+    public String readCommand() throws DukeException {
+        try {
+            return myObj.nextLine();
+        } catch (NoSuchElementException e) {
+            throw new DukeException(e.getMessage());
+        }
     }
 
 }
