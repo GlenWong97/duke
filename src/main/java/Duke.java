@@ -6,6 +6,13 @@ public class Duke {
     private TaskList tasks;
     private Ui ui;
 
+    /**
+     * Main constructor in the command line interface.
+     * Instantiates ui, storage and taskList object.
+     * Loads save file based on the filepath.
+     * Returns DukeException if the file does not exist.
+     * @param filePath the path towards the duke.txt file containing all the saved tasks.
+     */
     public Duke(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -17,6 +24,12 @@ public class Duke {
         }
     }
 
+    /**
+     * Takes in command until the command "bye" is given.
+     * Greets the user when program starts and ends.
+     * Execute the command by sending it through the parser class.
+     * @throws IOException If the saved file - duke.txt does not exist.
+     */
     public void run() throws IOException {
 
         ui.openingMessage();
@@ -48,15 +61,5 @@ public class Duke {
     String getResponse(String input) {
         return "Duke heard: " + input;
     }
-
-
-    /*public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-    }*/
 
 }

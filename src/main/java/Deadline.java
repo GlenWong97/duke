@@ -11,16 +11,35 @@ public class Deadline extends Task {
     }
 
 
+    /**
+     * Formats the deadline object.
+     * @return a formatted string for deadline object.
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";
     }
+
+    /**
+     * Prints confirmation message when a deadline has been created.
+     * Prints the total number of tasks.
+     * @return a string containing confirmation message, the name of deadline, and
+     * total number of tasks.
+     */
     public String printText() {
         String text1 = " Got it. I've added this task:\n";
         String text2 = "   " + toString() + "\n";
         String text3 = " Now you have " + Integer.toString(Task.getNumberOfTasks()) +" tasks in the list.\n";
         return (text1 + text2 + text3);
     }
+
+    /**
+     * Creates a deadline object and format the date correctly.
+     * @param taskList the list of tasks object.
+     * @param inputMessage the entire string of input command.
+     * @param cf the container that stores all the tasks objects.
+     * @throws IOException If the saved file - duke.txt does not exist.
+     */
     static void createDlEvent(ArrayList<Task> taskList, String inputMessage, Storage cf) throws IOException {
         String[] dlArray = inputMessage.split(" ");
         String bufferItem = "";

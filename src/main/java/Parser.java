@@ -1,5 +1,16 @@
 public class Parser {
-
+    /**
+     * Takes in the entire string of command and split it based on
+     * the first substring. Depending on the command, a specific command
+     * class will execute the command.
+     * @param command the string given by user input.
+     * @return a new command object based on the command.
+     * @throws DukeException if the index given is incorrect.
+     * @throws DukeException if the index is not stated.
+     * @throws DukeException there is no keyword in find.
+     * @throws DukeException input command is not registered.
+     * @throws DukeException index is not of numerical value.
+     */
     public static Command parse(String command) throws DukeException {
         String[] msgArray = command.split("\\s+");
         switch (msgArray[0]) {

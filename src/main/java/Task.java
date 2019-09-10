@@ -39,7 +39,7 @@ public class Task {
         return numberOfTasks;
     }
 
-    static void searchKeyword(ArrayList<Task>taskList, String[] msgArray) throws DukeException {
+    /*static void searchKeyword(ArrayList<Task>taskList, String[] msgArray) throws DukeException {
         String[] matchedKeyword;
 
     }
@@ -60,6 +60,6 @@ public class Task {
         } catch (DukeException ex) {
             System.out.println(" ☹ OOPS!!! " + ex.getMessage());
         }
-    }
+    }*/
 
 }

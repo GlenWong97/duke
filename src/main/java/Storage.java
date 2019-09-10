@@ -9,10 +9,21 @@ public class Storage {
     private String newfilepath = "./data/temp.txt";
     private static TaskList bufferList;
 
+    /**
+     * Instantiate a storage object based on the filepath.
+     * @param filePath a string that denotes the path to the save file.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Reads the existing save file and depending on the task,
+     * a different task object will be instantiated in the program.
+     * Task object will be stored in the taskList.
+     * @return an ArrayList containing the various tasks saved in the text file.
+     * @throws DukeException if there is no existing save file.
+     */
     public ArrayList<Task> load() throws DukeException {
 
         try {
@@ -60,6 +71,14 @@ public class Storage {
 
     }
 
+    /**
+     * Creates a Deadline or Event object based on the save file.
+     * @param typeOf String that can be either deadline or event.
+     * @param isDone String that denotes if the task has been completed.
+     * @param nameTask the name of the specific task.
+     * @param date the deadline for deadline task or the date in which an event is happening.
+     * @throws IOException if there is no existing save file.
+     */
     public void saveDlEvent(String typeOf, String isDone, String nameTask, String date) throws IOException {
         try {
             FileWriter fw = new FileWriter(filePath, true);
@@ -71,6 +90,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Creates a todo object based on the save file.
+     * @param typeOf String that can be either deadline or event.
+     * @param isDone String that denotes if the task has been completed.
+     * @param nameTask the name of the specific task.
+     * @throws IOException if there is no existing save file.
+     */
     public void saveTodo(String typeOf, String isDone, String nameTask) throws IOException {
         try {
             FileWriter fw = new FileWriter("./data/duke.txt", true);
@@ -81,23 +107,13 @@ public class Storage {
             System.out.println("Error: " + e.getMessage());
         }
     }
-    public void transferFile() throws IOException {
-        try {
-            FileWriter fw = new FileWriter("./data/temp.txt", true);
-            PrintWriter pw = new PrintWriter(fw);
-            File file = new File(filePath);
-            Scanner scanner = new Scanner(file).useDelimiter("\\|\\s*");
-            while (scanner.hasNext()) {
-                pw.println(scanner.nextLine());
-            }
-            pw.close();
-            scanner.close();
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
 
-    }
-
+    /**
+     * Update the status of a particular task based on the index
+     * in the text file.
+     * @param lineNumber the index of the task that is being saved in the taskList.
+     * @throws IOException if there is no existing save file.
+     */
     public void updateFile(int lineNumber) throws IOException {
 
         try {
@@ -130,6 +146,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Delete the particular task based on the index in the text file.
+     * @param lineNumber the index of the task that is being saved in the taskList.
+     * @throws IOException if there is no existing save file.
+     */
     public void deleteFile(int lineNumber) throws IOException {
 
         try {
@@ -156,6 +177,22 @@ public class Storage {
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+    public void transferFile() throws IOException {
+        try {
+            FileWriter fw = new FileWriter("./data/temp.txt", true);
+            PrintWriter pw = new PrintWriter(fw);
+            File file = new File(filePath);
+            Scanner scanner = new Scanner(file).useDelimiter("\\|\\s*");
+            while (scanner.hasNext()) {
+                pw.println(scanner.nextLine());
+            }
+            pw.close();
+            scanner.close();
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
     }
 
 
